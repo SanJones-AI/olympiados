@@ -1,20 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { PROBLEMS_DATA } from '../data/problems';
 import { LatexRenderer } from '../components/ui/LatexRenderer';
-import { ArrowRight, Flame, Trophy, CheckCircle2, Shield, Sparkles, Terminal, BookOpen, Layers, LogIn, UserPlus } from 'lucide-react';
+import {
+  ArrowRight, Flame, Trophy, CheckCircle2, Shield, Sparkles, Terminal, BookOpen,
+  Layers, LogIn, UserPlus, HelpCircle, ChevronDown, Star, Zap, Target, BarChart2
+} from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
-  const { navigate, user, isAuthenticated } = useApp();
+  const { navigate, isAuthenticated } = useApp();
 
-  const sampleProblem = PROBLEMS_DATA[0]; // Functional Equation
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+
+  const sampleProblem = PROBLEMS_DATA[0];
+
+  const faqs = [
+    {
+      q: 'What competitions does OlympiadOS cover?',
+      a: 'OlympiadOS covers high school competitions across Mathematics (AMC 8/10/12, AIME, USAMO, IMO), Physics (F=ma, USAPhO, IPhO), Chemistry (USNCO, IChO), and Biology (USABO, IBO), as well as Science Bowl & Science Bee.',
+    },
+    {
+      q: 'Is KaTeX math rendering fully supported?',
+      a: 'Yes! All problem statements, hints, user scratchpad notes, and step-by-step proofs render inline ($...$) and block ($$...$$) LaTeX formulas in real time.',
+    },
+    {
+      q: 'How does the Elo rating system work?',
+      a: 'Your skill is tracked using an Elo rating system. Solving harder problems correctly yields higher rating gains, while adaptive problem queues automatically recommend problems matching your target level.',
+    },
+    {
+      q: 'Can I use OlympiadOS for free?',
+      a: 'Yes, OlympiadOS is free to start. You can browse problems, solve daily challenges, use interactive formula sheets, and create personalized study plans.',
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
       {/* Background Grid Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
 
-      {/* TOP LANDING NAVBAR (Matching user directive: Landing Page appears first with Log In options) */}
+      {/* TOP HEADER NAVBAR */}
       <header className="sticky top-0 z-40 w-full bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <button
@@ -30,20 +54,22 @@ export const LandingPage: React.FC = () => {
           </button>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-6 text-xs font-mono text-zinc-400">
-            <button onClick={() => navigate('/about')} className="hover:text-zinc-100 transition-colors">About</button>
-            <button onClick={() => navigate('/problems')} className="hover:text-zinc-100 transition-colors">Problems</button>
+          <nav className="hidden md:flex items-center gap-8 text-xs font-mono text-zinc-400">
+            <a href="#features" className="hover:text-zinc-100 transition-colors">Features</a>
+            <a href="#disciplines" className="hover:text-zinc-100 transition-colors">Disciplines</a>
+            <a href="#how-it-works" className="hover:text-zinc-100 transition-colors">How It Works</a>
+            <a href="#faq" className="hover:text-zinc-100 transition-colors">FAQ</a>
             <button onClick={() => navigate('/pricing')} className="hover:text-zinc-100 transition-colors">Pricing</button>
-          </div>
+          </nav>
 
-          {/* Top Right Log In & Auth Buttons */}
+          {/* Action Buttons: Log In & Sign Up */}
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <button
                 onClick={() => navigate('/study-plan')}
                 className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-all shadow-glow-sm flex items-center gap-1.5 font-mono"
               >
-                <span>Enter Portal</span>
+                <span>Enter Workspace</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             ) : (
@@ -57,10 +83,10 @@ export const LandingPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => navigate('/login')}
-                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-all shadow-glow-sm flex items-center gap-1.5 font-mono hidden sm:flex"
+                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-all shadow-glow-sm flex items-center gap-1.5 font-mono"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
-                  <span>Create Account</span>
+                  <span>Sign Up</span>
                 </button>
               </>
             )}
@@ -68,34 +94,30 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* HERO SECTION */}
       <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Academic Pill Tag */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-emerald-400 mb-6 shadow-glow-sm">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-emerald-400 mb-6 shadow-glow-sm">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Engineered for USAMO, IMO, USAPhO, IPhO & IChO Competitors</span>
+          <span>The Training Platform for Math & Science Olympiads</span>
         </div>
 
-        {/* Hero Title */}
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-100 max-w-4xl mx-auto leading-[1.1] mb-6">
-          Serious Practice for <br className="hidden sm:inline" />
+          Master Advanced <br className="hidden sm:inline" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
             Math & Science Olympiads
           </span>
         </h1>
 
-        {/* Hero Subtitle */}
         <p className="text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
-          OlympiadOS provides rigorous proof-based problems, an elite training environment, and structured diagnostic feedback for students who aim to become exceptional problem solvers.
+          Rigorous proof-based problems, real-time KaTeX LaTeX math rendering, timed contest environments, and adaptive Elo analytics for serious student competitors.
         </p>
 
-        {/* Primary & Secondary CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <button
             onClick={() => navigate('/login')}
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm sm:text-base transition-all shadow-glow-md flex items-center justify-center gap-2 group"
           >
-            <span>Log In to Start Practicing</span>
+            <span>Get Started Free</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
@@ -108,226 +130,247 @@ export const LandingPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Key Pillars Badges */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
-            <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1 font-semibold">LaTeX Native</div>
-            <div className="text-sm font-medium text-zinc-200">Full KaTeX math rendering for clean proofs.</div>
-          </div>
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
-            <div className="text-xs font-mono text-blue-400 uppercase tracking-wider mb-1 font-semibold">Depth over Volume</div>
-            <div className="text-sm font-medium text-zinc-200">High-yield problems designed to test core principles.</div>
-          </div>
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
-            <div className="text-xs font-mono text-purple-400 uppercase tracking-wider mb-1 font-semibold">Timed Practice</div>
-            <div className="text-sm font-medium text-zinc-200">Simulated contest environments with live timers.</div>
-          </div>
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
-            <div className="text-xs font-mono text-amber-400 uppercase tracking-wider mb-1 font-semibold">Elo Rating</div>
-            <div className="text-sm font-medium text-zinc-200">Adaptive problem queue matching your current skill.</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Realistic Interactive Product Preview Section */}
-      <section className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 w-full">
-        <div className="text-center mb-6">
-          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">Realistic Training Workspace</span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-1">Built Like a Developer IDE for Olympiads</h2>
-        </div>
-
-        {/* Window Shell */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden text-left">
-          {/* Window Header */}
-          <div className="bg-zinc-950 px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+        {/* Real Product Mockup Preview */}
+        <div className="max-w-5xl mx-auto rounded-2xl bg-zinc-900 border border-zinc-800 p-4 shadow-2xl text-left">
+          <div className="bg-zinc-950 rounded-xl p-4 border border-zinc-800/80 flex items-center justify-between text-xs font-mono mb-3">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
-              <span className="text-xs font-mono text-zinc-400 ml-2">olympiados-workspace // {sampleProblem.title}</span>
+              <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
+              <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
+              <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
+              <span className="text-zinc-400 ml-2">olympiados-workspace // {sampleProblem.title}</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30">
-                1895 ELO Workspace
-              </span>
-              <button
-                onClick={() => navigate('/login')}
-                className="text-xs font-mono text-emerald-400 hover:underline flex items-center gap-1"
-              >
-                Log In to Solve <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
+            <button
+              onClick={() => navigate('/login')}
+              className="text-emerald-400 hover:underline flex items-center gap-1 font-bold"
+            >
+              Log In to Solve <ArrowRight className="w-3 h-3" />
+            </button>
           </div>
 
-          {/* Window Body Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-zinc-800/80">
-            {/* Main Problem Area (2 Cols) */}
-            <div className="lg:col-span-2 p-6 bg-zinc-900/60 space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-500/30 font-bold">
-                  {sampleProblem.subject}
-                </span>
-                <span className="text-xs font-mono text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">
-                  {sampleProblem.topic}
-                </span>
-                <span className="text-xs font-mono text-zinc-500">
-                  {sampleProblem.source}
-                </span>
-              </div>
-
-              <h3 className="text-lg font-bold text-zinc-100">{sampleProblem.title}</h3>
-
-              <div className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-sm">
-                <LatexRenderer content={sampleProblem.statement} />
-              </div>
-
-              {/* Sample Hint Drawer Preview */}
-              <div className="p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/20 flex items-start gap-3">
-                <Terminal className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                <div className="text-xs text-emerald-200/90 font-mono">
-                  <strong>Hint 1:</strong> Consider setting $x = 0$ to analyze the behavior of $f(f(y))$.
-                </div>
-              </div>
+          <div className="p-4 bg-zinc-900 rounded-xl space-y-3">
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-500/30 font-bold">
+                {sampleProblem.subject}
+              </span>
+              <span className="text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">
+                {sampleProblem.topic}
+              </span>
+              <span className="text-zinc-500">
+                {sampleProblem.source}
+              </span>
             </div>
-
-            {/* Sidebar Metadata (1 Col) */}
-            <div className="p-6 bg-zinc-950/40 space-y-4 text-xs font-mono">
-              <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 space-y-2">
-                <div className="flex justify-between text-zinc-400">
-                  <span>Difficulty</span>
-                  <span className="text-purple-400 font-bold">{sampleProblem.difficulty}</span>
-                </div>
-                <div className="flex justify-between text-zinc-400">
-                  <span>Estimated Time</span>
-                  <span className="text-zinc-200">{sampleProblem.estimated_time} minutes</span>
-                </div>
-                <div className="flex justify-between text-zinc-400">
-                  <span>Target Olympiad</span>
-                  <span className="text-emerald-400">USAMO / IMO</span>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 space-y-1.5">
-                <div className="text-zinc-400 font-semibold mb-1">Session Timer</div>
-                <div className="text-2xl font-bold text-zinc-100">00:14:32</div>
-                <div className="text-[10px] text-zinc-500">Active live tracking enabled</div>
-              </div>
-
-              <button
-                onClick={() => navigate('/login')}
-                className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
-              >
-                <LogIn className="w-4 h-4" /> Log In to Access Workspace
-              </button>
+            <div className="text-sm p-3 rounded-lg bg-zinc-950 border border-zinc-800/80 text-zinc-200">
+              <LatexRenderer content={sampleProblem.statement} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Olympiad Track Breakdown */}
-      <section className="py-16 bg-zinc-900/50 border-t border-b border-zinc-800/80">
+      {/* FEATURES SECTION ("Why OlympiadOS") */}
+      <section id="features" className="py-20 bg-zinc-900/40 border-t border-b border-zinc-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-4xl font-bold text-zinc-100">Four Rigorous Olympiad Disciplines</h2>
-            <p className="text-sm sm:text-base text-zinc-400 mt-2">
-              Every subject features authentic problem sets carefully tagged by subfield, difficulty rating, and historical tournament origin.
-            </p>
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">Built for Competitors</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-100">Everything You Need to Win Medals</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Math */}
-            <div className="p-6 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-blue-500/40 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-blue-950 text-blue-400 border border-blue-500/30 flex items-center justify-center font-mono font-bold text-lg mb-4">
-                ∑
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-950 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+                <Target className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-zinc-100 mb-2">Mathematics</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed mb-4">
-                Algebraic proof, Number Theory modular congruences, Euclidean Geometry, and Combinatorics.
+              <h3 className="text-lg font-bold text-zinc-100">Proof-Based Rigor</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Authentic problems from USAMO, IMO, USAPhO, USNCO, and USABO tournaments with complete step-by-step proofs.
               </p>
-              <button
-                onClick={() => navigate('/problems?subject=Mathematics')}
-                className="text-xs font-mono text-blue-400 hover:underline flex items-center gap-1"
-              >
-                Browse Math Problems (30+) <ArrowRight className="w-3 h-3" />
-              </button>
             </div>
 
-            {/* Physics */}
-            <div className="p-6 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/40 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-purple-950 text-purple-400 border border-purple-500/30 flex items-center justify-center font-mono font-bold text-lg mb-4">
-                ⚡
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-950 border border-blue-500/30 text-blue-400 flex items-center justify-center">
+                <Terminal className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-zinc-100 mb-2">Physics</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed mb-4">
-                Lagrangian mechanics, Maxwell electrodynamics, thermodynamics entropy, and quantum wave mechanics.
+              <h3 className="text-lg font-bold text-zinc-100">Native KaTeX LaTeX</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Beautiful real-time LaTeX math rendering for equations, matrices, geometric relations, and chemical formulas.
               </p>
-              <button
-                onClick={() => navigate('/problems?subject=Physics')}
-                className="text-xs font-mono text-purple-400 hover:underline flex items-center gap-1"
-              >
-                Browse Physics Problems (15+) <ArrowRight className="w-3 h-3" />
-              </button>
             </div>
 
-            {/* Chemistry */}
-            <div className="p-6 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/40 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-mono font-bold text-lg mb-4">
-                ⚗
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-purple-950 border border-purple-500/30 text-purple-400 flex items-center justify-center">
+                <Trophy className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-zinc-100 mb-2">Chemistry</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed mb-4">
-                Organic reaction mechanisms, chemical kinetics, crystal field stabilization, and cell thermodynamics.
+              <h3 className="text-lg font-bold text-zinc-100">Simulated Virtual Contests</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Practice under realistic exam conditions with live countdown timers, strict submission windows, and scorecards.
               </p>
-              <button
-                onClick={() => navigate('/problems?subject=Chemistry')}
-                className="text-xs font-mono text-emerald-400 hover:underline flex items-center gap-1"
-              >
-                Browse Chemistry Problems (10+) <ArrowRight className="w-3 h-3" />
-              </button>
             </div>
 
-            {/* Biology */}
-            <div className="p-6 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-amber-950 text-amber-400 border border-amber-500/30 flex items-center justify-center font-mono font-bold text-lg mb-4">
-                🧬
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-950 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                <BarChart2 className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-zinc-100 mb-2">Biology</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed mb-4">
-                Quantitative population genetics, Michaelis-Menten kinetics, membrane biophysics, and gene mapping.
+              <h3 className="text-lg font-bold text-zinc-100">Adaptive Elo Rating</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Track your rating progression, identify weak subtopics, and receive targeted daily problem recommendations.
               </p>
-              <button
-                onClick={() => navigate('/problems?subject=Biology')}
-                className="text-xs font-mono text-amber-400 hover:underline flex items-center gap-1"
-              >
-                Browse Biology Problems (10+) <ArrowRight className="w-3 h-3" />
-              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action Banner */}
-      <section className="py-20 max-w-5xl mx-auto px-4 text-center">
-        <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* DISCIPLINES SECTION */}
+      <section id="disciplines" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
+          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">Subject Coverage</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-100">Four Major Olympiad Disciplines</h2>
+        </div>
 
-          <Trophy className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-          <h2 className="text-3xl sm:text-4xl font-bold text-zinc-100 mb-4">
-            Ready to Become an Exceptional Problem Solver?
-          </h2>
-          <p className="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">
-            Join high school competitors around the world training for national and international Olympiads with OlympiadOS.
-          </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+            <div className="text-2xl">∑</div>
+            <h3 className="text-lg font-bold text-zinc-100">Mathematics</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Algebra, Number Theory, Euclidean Geometry, and Combinatorics.
+            </p>
+          </div>
 
-          <button
-            onClick={() => navigate('/login')}
-            className="px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm sm:text-base transition-all shadow-glow-md flex items-center justify-center gap-2 mx-auto"
-          >
-            <LogIn className="w-4 h-4" />
-            <span>Log In to Launch Practice Session</span>
-          </button>
+          <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+            <div className="text-2xl">⚡</div>
+            <h3 className="text-lg font-bold text-zinc-100">Physics</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Lagrangian Mechanics, Electrodynamics, Thermodynamics, and Quantum Mechanics.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+            <div className="text-2xl">⚗</div>
+            <h3 className="text-lg font-bold text-zinc-100">Chemistry</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Organic Reaction Mechanisms, Chemical Kinetics, Physical & Inorganic Chemistry.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
+            <div className="text-2xl">🧬</div>
+            <h3 className="text-lg font-bold text-zinc-100">Biology</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Genetics & Evolution, Cell Biochemistry, Plant/Animal Physiology, and Ecology.
+            </p>
+          </div>
         </div>
       </section>
+
+      {/* HOW IT WORKS SECTION */}
+      <section id="how-it-works" className="py-20 bg-zinc-900/40 border-t border-b border-zinc-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">Simple Workflow</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-100">How OlympiadOS Works</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold text-lg flex items-center justify-center mx-auto">
+                1
+              </div>
+              <h3 className="text-lg font-bold text-zinc-100">Sign Up & Select Competitions</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Choose your target Olympiads (AMC, AIME, USAMO, USAPhO, USNCO, USABO) to set your study goals.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-mono font-bold text-lg flex items-center justify-center mx-auto">
+                2
+              </div>
+              <h3 className="text-lg font-bold text-zinc-100">Generate Personalized Study Plan</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Receive an automated weekly schedule with daily target problems tailored to your target difficulty level.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-mono font-bold text-lg flex items-center justify-center mx-auto">
+                3
+              </div>
+              <h3 className="text-lg font-bold text-zinc-100">Practice & Master Weak Areas</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Solve proof-based problems in the IDE workspace, review progressive hints, and climb the global Elo leaderboard.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section id="faq" className="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16 space-y-2">
+          <span className="text-xs font-mono uppercase tracking-widest text-emerald-400">Got Questions?</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-100">Frequently Asked Questions</h2>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div
+              key={faq.q}
+              className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden transition-colors"
+            >
+              <button
+                onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                className="w-full px-6 py-4 text-left font-bold text-sm text-zinc-100 flex items-center justify-between"
+              >
+                <span>{faq.q}</span>
+                <ChevronDown className={`w-4 h-4 text-zinc-400 transition-transform ${activeFaq === index ? 'rotate-180 text-emerald-400' : ''}`} />
+              </button>
+              {activeFaq === index && (
+                <div className="px-6 pb-4 text-xs text-zinc-400 leading-relaxed border-t border-zinc-800/60 pt-3">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CALL TO ACTION BOTTOM BANNER */}
+      <section className="py-20 max-w-5xl mx-auto px-4 text-center">
+        <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden space-y-6">
+          <Trophy className="w-12 h-12 text-emerald-400 mx-auto" />
+          <h2 className="text-3xl sm:text-4xl font-bold text-zinc-100 max-w-2xl mx-auto">
+            Ready to Start Your Olympiad Training Journey?
+          </h2>
+          <p className="text-zinc-400 text-sm max-w-lg mx-auto">
+            Create your account to access proof-based problems, study plan generators, and interactive formula sheets.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={() => navigate('/login')}
+              className="px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm transition-all shadow-glow-md flex items-center gap-2"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>Create Account Now</span>
+            </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="px-8 py-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 font-bold text-sm transition-all flex items-center gap-2"
+            >
+              <LogIn className="w-4 h-4 text-emerald-400" />
+              <span>Log In</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-zinc-800 py-12 bg-zinc-950 text-xs font-mono text-zinc-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-400 font-bold">Ω OlympiadOS</span>
+            <span>• Academic Practice Engine</span>
+          </div>
+          <div>© 2026 OlympiadOS Inc. All rights reserved.</div>
+        </div>
+      </footer>
     </div>
   );
 };
