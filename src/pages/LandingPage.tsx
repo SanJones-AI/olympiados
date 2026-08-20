@@ -1,19 +1,43 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { ArrowRight, Moon, Sun } from 'lucide-react';
+import { PROBLEMS_DATA } from '../data/problems';
+import { LatexRenderer } from '../components/ui/LatexRenderer';
+import {
+  ArrowRight, Moon, Sun, BookOpen, Layers, Flame, FileText, Calendar, BarChart2, Shield, Sparkles, CheckCircle2, Trophy
+} from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const { navigate, theme, toggleTheme, isAuthenticated } = useApp();
 
+  const sampleProblem = PROBLEMS_DATA[0];
+
+  const olympiadCards = [
+    { name: 'AMC 8', desc: 'Middle school foundation competition', icon: '📐', subject: 'Math' },
+    { name: 'AMC 10', desc: 'Under-17 high school mathematics', icon: '📊', subject: 'Math' },
+    { name: 'AMC 12', desc: 'Advanced high school mathematics', icon: '📈', subject: 'Math' },
+    { name: 'AIME', desc: '15-question 3-hour invitational exam', icon: '🧮', subject: 'Math' },
+    { name: 'USAPhO', desc: 'Physics Olympiad semi-final & final', icon: '⚛️', subject: 'Physics' },
+    { name: 'USABO', desc: 'USA Biology Olympiad national exam', icon: '🧬', subject: 'Biology' },
+    { name: 'USNCO', desc: 'National Chemistry Olympiad exam', icon: '🧪', subject: 'Chemistry' },
+    { name: 'Science Bowl', desc: 'Fast-paced buzzer competition', icon: '🔬', subject: 'Science' },
+  ];
+
+  const studyTools = [
+    { title: 'Interactive Flashcards', desc: 'Spaced repetition decks for key formulas, theorems, and chemical reactions.', icon: Layers, path: '/flashcards' },
+    { title: 'LaTeX Formula Sheet', desc: 'Categorized cheat sheet with instant KaTeX math rendering.', icon: FileText, path: '/formula-sheet' },
+    { title: 'Study Plan Generator', desc: 'Personalized weekly schedule and daily target problem tracker.', icon: Calendar, path: '/study-plan' },
+    { title: 'Performance Analytics', desc: 'Elo rating progression, accuracy breakdown, and weak area diagnostics.', icon: BarChart2, path: '/performance' },
+  ];
+
   return (
     <div className="min-h-screen bg-[#fafafa] dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 flex flex-col font-sans selection:bg-blue-500/20">
-      {/* Background Vertical Grid Stripe Pattern (Matching screenshot) */}
+      {/* Background Vertical Grid Pattern (Matching screenshot) */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
 
-      {/* TOP LANDING NAVBAR (Exact match of uploaded screenshot header) */}
+      {/* TOP LANDING NAVBAR */}
       <header className="relative z-40 w-full bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
-          {/* Logo & Main Nav Links */}
+          {/* Logo & Navigation Links */}
           <div className="flex items-center gap-8">
             <button
               onClick={() => navigate('/')}
@@ -73,8 +97,8 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* HERO SECTION (Exact copy & styling from uploaded screenshot) */}
-      <section className="relative pt-20 pb-24 md:pt-28 md:pb-36 max-w-5xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center">
-        {/* Pill Tag: • Math & science competition preparation */}
+      <section className="relative pt-20 pb-20 md:pt-28 md:pb-32 max-w-5xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center">
+        {/* Pill Tag */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs font-semibold text-slate-600 dark:text-zinc-400 mb-8 shadow-xs">
           <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-emerald-400 inline-block" />
           <span>Math & science competition preparation</span>
@@ -92,7 +116,7 @@ export const LandingPage: React.FC = () => {
         </p>
 
         {/* Hero Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <button
             onClick={() => navigate('/login')}
             className="w-full sm:w-auto px-7 py-3 rounded-xl bg-[#2563eb] hover:bg-blue-600 text-white font-bold text-sm transition-all shadow-xs flex items-center justify-center gap-2"
@@ -109,6 +133,89 @@ export const LandingPage: React.FC = () => {
           </button>
         </div>
       </section>
+
+      {/* OLYMPIAD COMPETITIONS SHOWCASE GRID */}
+      <section className="py-16 bg-white dark:bg-zinc-900 border-t border-b border-slate-200/80 dark:border-zinc-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
+          <div className="text-center space-y-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#2563eb] dark:text-emerald-400">
+              Supported Tournaments
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-zinc-100">
+              Comprehensive Competition Coverage
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {olympiadCards.map(item => (
+              <div
+                key={item.name}
+                onClick={() => navigate('/problems')}
+                className="p-5 rounded-2xl bg-slate-50 dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800/80 hover:border-blue-500/60 dark:hover:border-emerald-500/60 transition-all cursor-pointer space-y-2 group shadow-xs"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl">{item.icon}</span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 dark:bg-zinc-800 text-blue-700 dark:text-emerald-400 border border-blue-200 dark:border-zinc-700">
+                    {item.subject}
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-emerald-400 transition-colors">
+                  {item.name}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* STUDY TOOLS SHOWCASE */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
+        <div className="text-center space-y-2">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#2563eb] dark:text-emerald-400">
+            Competition Suite
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-zinc-100">
+            Tools Designed for Elite Problem Solvers
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {studyTools.map(tool => {
+            const Icon = tool.icon;
+            return (
+              <div
+                key={tool.title}
+                onClick={() => navigate(tool.path)}
+                className="p-6 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80 hover:border-blue-500/60 dark:hover:border-emerald-500/60 transition-all cursor-pointer space-y-3 shadow-xs"
+              >
+                <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-zinc-800 border border-blue-200 dark:border-zinc-700 text-[#2563eb] dark:text-emerald-400 flex items-center justify-center">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-zinc-100">
+                  {tool.title}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
+                  {tool.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="mt-auto border-t border-slate-200/80 dark:border-zinc-800/80 py-10 bg-white dark:bg-zinc-950 text-xs font-mono text-slate-500 dark:text-zinc-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-900 dark:text-zinc-100">OlympiadOS</span>
+            <span>• Serious Practice Engine</span>
+          </div>
+          <div>© 2026 OlympiadOS Inc. All rights reserved.</div>
+        </div>
+      </footer>
     </div>
   );
 };
