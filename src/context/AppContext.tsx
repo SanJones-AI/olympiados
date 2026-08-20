@@ -51,7 +51,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentPath, setCurrentPath] = useState<string>(() => {
-    return window.location.pathname || '/login';
+    const raw = window.location.pathname.replace(/^\/olympiados/, '');
+    return !raw || raw === '/' ? '/' : raw;
   });
 
   const [sessionToken, setSessionToken] = useState<string | null>(() => {
@@ -157,7 +158,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPath(window.location.pathname || '/login');
+      const raw = window.location.pathname.replace(/^\/olympiados/, '');
+      setCurrentPath(!raw || raw === '/' ? '/' : raw);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);

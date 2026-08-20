@@ -2,10 +2,10 @@ import React from 'react';
 import { useApp } from '../context/AppContext';
 import { PROBLEMS_DATA } from '../data/problems';
 import { LatexRenderer } from '../components/ui/LatexRenderer';
-import { ArrowRight, Flame, Trophy, CheckCircle2, Shield, Sparkles, Terminal, BookOpen, Layers, Award } from 'lucide-react';
+import { ArrowRight, Flame, Trophy, CheckCircle2, Shield, Sparkles, Terminal, BookOpen, Layers, LogIn, UserPlus } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
-  const { navigate, user } = useApp();
+  const { navigate, user, isAuthenticated } = useApp();
 
   const sampleProblem = PROBLEMS_DATA[0]; // Functional Equation
 
@@ -13,6 +13,60 @@ export const LandingPage: React.FC = () => {
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
       {/* Background Grid Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+
+      {/* TOP LANDING NAVBAR (Matching user directive: Landing Page appears first with Log In options) */}
+      <header className="sticky top-0 z-40 w-full bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2.5 group focus:outline-none"
+          >
+            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-mono font-bold text-base group-hover:border-emerald-400 group-hover:shadow-glow-sm transition-all">
+              Ω
+            </div>
+            <span className="font-mono text-base font-bold tracking-tight text-zinc-100 group-hover:text-emerald-400 transition-colors">
+              Olympiad<span className="text-emerald-400">OS</span>
+            </span>
+          </button>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-6 text-xs font-mono text-zinc-400">
+            <button onClick={() => navigate('/about')} className="hover:text-zinc-100 transition-colors">About</button>
+            <button onClick={() => navigate('/problems')} className="hover:text-zinc-100 transition-colors">Problems</button>
+            <button onClick={() => navigate('/pricing')} className="hover:text-zinc-100 transition-colors">Pricing</button>
+          </div>
+
+          {/* Top Right Log In & Auth Buttons */}
+          <div className="flex items-center gap-3">
+            {isAuthenticated ? (
+              <button
+                onClick={() => navigate('/study-plan')}
+                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-all shadow-glow-sm flex items-center gap-1.5 font-mono"
+              >
+                <span>Enter Portal</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 text-xs font-mono font-bold transition-all flex items-center gap-1.5"
+                >
+                  <LogIn className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Log In</span>
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-all shadow-glow-sm flex items-center gap-1.5 font-mono hidden sm:flex"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>Create Account</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </header>
 
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -38,10 +92,10 @@ export const LandingPage: React.FC = () => {
         {/* Primary & Secondary CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <button
-            onClick={() => navigate(user.onboardingCompleted ? '/dashboard' : '/onboarding')}
+            onClick={() => navigate('/login')}
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm sm:text-base transition-all shadow-glow-md flex items-center justify-center gap-2 group"
           >
-            <span>Start Practicing Now</span>
+            <span>Log In to Start Practicing</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
@@ -97,10 +151,10 @@ export const LandingPage: React.FC = () => {
                 1895 ELO Workspace
               </span>
               <button
-                onClick={() => navigate(`/problems/${sampleProblem.id}`)}
+                onClick={() => navigate('/login')}
                 className="text-xs font-mono text-emerald-400 hover:underline flex items-center gap-1"
               >
-                Open Interactive Workspace <ArrowRight className="w-3 h-3" />
+                Log In to Solve <ArrowRight className="w-3 h-3" />
               </button>
             </div>
           </div>
@@ -160,10 +214,10 @@ export const LandingPage: React.FC = () => {
               </div>
 
               <button
-                onClick={() => navigate(`/problems/${sampleProblem.id}`)}
+                onClick={() => navigate('/login')}
                 className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
               >
-                <Flame className="w-4 h-4" /> Start Problem Workspace
+                <LogIn className="w-4 h-4" /> Log In to Access Workspace
               </button>
             </div>
           </div>
@@ -266,10 +320,11 @@ export const LandingPage: React.FC = () => {
           </p>
 
           <button
-            onClick={() => navigate(user.onboardingCompleted ? '/dashboard' : '/onboarding')}
-            className="px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm sm:text-base transition-all shadow-glow-md"
+            onClick={() => navigate('/login')}
+            className="px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm sm:text-base transition-all shadow-glow-md flex items-center justify-center gap-2 mx-auto"
           >
-            Launch Your Training Session
+            <LogIn className="w-4 h-4" />
+            <span>Log In to Launch Practice Session</span>
           </button>
         </div>
       </section>
