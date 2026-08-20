@@ -50,10 +50,18 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentPath, setCurrentPath] = useState<string>(() => {
-    const raw = window.location.pathname.replace(/^\/olympiados/, '');
-    return !raw || raw === '/' ? '/' : raw;
-  });
+  const getNormalizedPath = (): string => {
+    let raw = window.location.pathname.replace(/^\/olympiados/, '');
+    if (window.location.hash && window.location.hash.startsWith('#/')) {
+      raw = window.location.hash.replace(/^#/, '');
+    }
+    if (!raw || raw === '/' || raw === '/index.html') {
+      return '/';
+    }
+    return raw;
+  };
+
+  const [currentPath, setCurrentPath] = useState<string>(() => getNormalizedPath());
 
   const [sessionToken, setSessionToken] = useState<string | null>(() => {
     return localStorage.getItem('olympiados_session');
@@ -158,8 +166,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     const handlePopState = () => {
-      const raw = window.location.pathname.replace(/^\/olympiados/, '');
-      setCurrentPath(!raw || raw === '/' ? '/' : raw);
+      setCurrentPath(getNormalizedPath());
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);

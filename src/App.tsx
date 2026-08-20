@@ -28,8 +28,8 @@ import { FormulaSheetPage } from './pages/FormulaSheetPage';
 const MainRouter: React.FC = () => {
   const { currentPath, isAuthenticated, user } = useApp();
 
-  // Public Landing Page
-  if (currentPath === '/') {
+  // Public Landing Page: Appears FIRST for all visitors
+  if (currentPath === '/' || currentPath === '' || currentPath === '/index.html' || currentPath === '/landing') {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans">
         <LandingPage />
